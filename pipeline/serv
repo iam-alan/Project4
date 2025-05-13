@@ -1,0 +1,44 @@
+pipeline {
+  agent any
+
+  environment {
+    SERVICE_NAME = "auth-service"
+    DEPLOYMENT_ENV = "blue"
+  }
+
+  stages {
+    stage('Checkout Code') {
+      steps {
+        git credentialsId: 'github-creds', url: 'https://github.com/iam-alan/Project4.git', branch: 'main'
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        script {
+          sh """
+            eval \$(minikube -p minikube docker-env)
+            docker build -t ${SERVICE_NAME} ${SERVICE_NAME}/
+          """
+        }
+      }
+    }
+
+    stage('Deploy to Kubernetes') {
+      steps {
+        script {
+          sh "kubectl apply -f k8s/${SERVICE_NAME}/"
+        }
+      }
+    }
+
+    stage('Verify Ingress') {
+      steps {
+        script {
+          sh "curl --retry 5 --retry-connrefused --fail http://ecommerce.local/${SERVICE_NAME} || true"
+        }
+      }
+    }
+  }
+}
+
