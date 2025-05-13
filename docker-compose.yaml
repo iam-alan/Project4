@@ -1,0 +1,24 @@
+version: "3.7"
+services:
+  auth:
+    build: ./auth
+    ports:
+      - "3001:3001"
+    networks:
+      - ecom-net
+  product:
+    build: ./product
+    ports:
+      - "3002:3002"
+    networks:
+      - ecom-net
+  order:
+    build: ./order
+    ports:
+      - "3003:3003"
+    networks:
+      - ecom-net
+
+networks:
+  ecom-net:
+    driver: bridge

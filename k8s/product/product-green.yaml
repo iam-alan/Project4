@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-green
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product
+      version: green
+  template:
+    metadata:
+      labels:
+        app: product
+        version: green
+    spec:
+      containers:
+        - name: product
+          image: product-service:latest
+          imagePullPolicy: always
+          ports:
+            - containerPort: 3002
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "500m"

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: product
+        version: blue
+    spec:
+      containers:
+        - name: product
+          image: iamalan10/product-service:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3002
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "500m"
